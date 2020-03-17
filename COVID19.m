@@ -15,15 +15,19 @@
 ## <https://www.gnu.org/licenses/>.
 
 ## 
-## [A,E,T,Tn,x0,x]=COVID19(m,n,tol)
+## function [K,T,x0,x]=COVID19(m,n,tol)
 ##
-## Example
-## [A,E,T03,Tn03,x0,x3]=COVID19(0,3,eps);
+## Example:
+## [K,T01,x0,x1]=COVID19(0,1,eps);
+## [K,T12,x1,x2]=COVID19(1,2,eps);
+## [K,T23,x2,x3]=COVID19(2,3,eps);
+## [K,T03,x0,x3]=COVID19(0,3,eps);
+## norm(x3-T03*x0)+norm((T23*T12*T01-T03)*x0)
 
 ## Author: fredy <fredy@HPCLAB>
 ## Created: 2020-03-17
 
-function [A,E,T,Tn,x0,x]=COVID19(m,n,tol)
+function [K,T,x0,x]=COVID19(m,n,tol)
 m=m+1;
 n=n+1;
 pkg load io;
@@ -77,5 +81,5 @@ T0=ones(M,1);
 y0=T*x0;
 T0(f2)=x(f2)./y0(f2);
 T=diag(T0)*T;
-Tn=T/diag(sum(T));
+K=A+T;
 end
