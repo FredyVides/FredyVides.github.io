@@ -81,5 +81,5 @@ T0=ones(M,1);
 y0=T*x0;
 T0(f2)=x(f2)./y0(f2);
 T=diag(T0)*T;
-K=A+T;
+K=A+E;
 end
