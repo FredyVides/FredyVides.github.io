@@ -22,7 +22,7 @@
 ## [K,T12,x1,x2]=COVID19(1,2,eps);
 ## [K,T23,x2,x3]=COVID19(2,3,eps);
 ## [K,T03,x0,x3]=COVID19(0,3,eps);
-## norm(x3-T03*x0)+norm((T23*T12*T01-T03)*x0)
+## norm(x3-T03*x0,1)+norm((T23*T12*T01-T03)*x0,1)
 
 ## Author: fredy <fredy@HPCLAB>
 ## Created: 2020-03-17
