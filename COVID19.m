@@ -15,7 +15,7 @@
 ## <https://www.gnu.org/licenses/>.
 
 ## 
-## function [K,T,x0,x]=COVID19(m,n,tol)
+## function [K,T,x0,x]=COVID19(m,n,tol,graph)
 ##
 ## Example:
 ## [K,T01,x0,x1]=COVID19(0,1,eps);
@@ -27,7 +27,7 @@
 ## Author: fredy <fredy@HPCLAB>
 ## Created: 2020-03-17
 
-function [K,T,x0,x]=COVID19(m,n,tol)
+function [K,T,x0,x]=COVID19(m,n,tol,graph)
 m=m+1;
 n=n+1;
 pkg load io;
@@ -37,33 +37,38 @@ A=HNConnect (1:18,1:18);
 [M,N]=size(A);
 E=eye(M,N);
 K=A+E;
-r=.5;
-z1=(r*exp(2*pi*i*(0:6)/7)).';
-z2=(2.0*r*exp(20*pi*i*(0:8)/(9*21))).';
-z3=2.4*r*exp((pi+.1)*i/4);
-xy=zeros(M,2);
-xy([15 18 4 12 17 2 7],:)=[real(z1),imag(z1)];
-xy([9 3 1 6 16 5 14 13 10],:)=[real(z2),imag(z2)];
-xy(11,:)=[real(z3),imag(z3)];
-subplot(211);
-gplot (A,xy,'k-');
-hold on;
-plot(xy(:,1),xy(:,2),'k.','markersize',20,xy(8,1),...
-xy(8,2),'r.','markersize',20,xy(6,1),xy(6,2),...
-'b.','markersize',20);
-hold off;
-axis off;
-axis square;
-subplot(212);
-XY=randn(M,2);
-gplot (A,XY,'k-');
-hold on;
-plot(XY(:,1),XY(:,2),'k.','markersize',20,XY(8,1),...
-XY(8,2),'r.','markersize',20,XY(6,1),XY(6,2),...
-'b.','markersize',20);
-hold off;
-axis off;
-axis square;
+if nargin<=3
+	graph=1;
+end
+if graph==1
+	r=.5;
+	z1=(r*exp(2*pi*i*(0:6)/7)).';
+	z2=(2.0*r*exp(20*pi*i*(0:8)/(9*21))).';
+	z3=2.4*r*exp((pi+.1)*i/4);
+	xy=zeros(M,2);
+	xy([15 18 4 12 17 2 7],:)=[real(z1),imag(z1)];
+	xy([9 3 1 6 16 5 14 13 10],:)=[real(z2),imag(z2)];
+	xy(11,:)=[real(z3),imag(z3)];
+	subplot(211);
+	gplot (A,xy,'k-');
+	hold on;
+	plot(xy(:,1),xy(:,2),'k.','markersize',20,xy(8,1),...
+	xy(8,2),'r.','markersize',20,xy(6,1),xy(6,2),...
+	'b.','markersize',20);
+	hold off;
+	axis off;
+	axis square;
+	subplot(212);
+	XY=randn(M,2);
+	gplot (A,XY,'k-');
+	hold on;
+	plot(XY(:,1),XY(:,2),'k.','markersize',20,XY(8,1),...
+	XY(8,2),'r.','markersize',20,XY(6,1),XY(6,2),...
+	'b.','markersize',20);
+	hold off;
+	axis off;
+	axis square;
+end
 x0=COVIDHist (1:18,m);
 f0=find(abs(x0)<=tol);
 x=COVIDHist (1:18,n);
