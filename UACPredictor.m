@@ -24,6 +24,7 @@
 ## Created: 2020-03-28
 
 function [Xh,T,EIHUB,EIHLB,EGHUB,EGHLB]=UACPredictor(n,r,tol)
+	pkg load io;
 	Xh=xlsread ('COVID19History.xlsx');
 	[p,m]=size(Xh);
 	Xh=Xh(1:(p-1),(n+1):(r+1));
