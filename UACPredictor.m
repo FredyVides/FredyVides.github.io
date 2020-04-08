@@ -26,6 +26,7 @@
 function [Xh,T,EIHUB,EIHLB,EGHUB,EGHLB]=UACPredictor(n,r,tol)
 	pkg load io;
 	Xh=xlsread ('COVID19History.xlsx');
+  HNConnect=xlsread ('HNConnect0.xlsx');
 	[p,m]=size(Xh);
 	Xh=Xh(1:(p-1),(n+1):(r+1));
 	[p,m]=size(Xh);

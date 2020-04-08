@@ -15,19 +15,15 @@
 ## <https://www.gnu.org/licenses/>.
 
 ## 
-## function [K,T,x0,x]=COVID19(m,n,tol,graph)
+## [K1718,A,x17,x18,xx,yy,zz,f]=DiffCOVID19(17,18,1,eps,1);
 ##
 ## Example:
-## [K,T01,x0,x1]=COVID19(0,1,eps);
-## [K,T12,x1,x2]=COVID19(1,2,eps);
-## [K,T23,x2,x3]=COVID19(2,3,eps);
-## [K,T03,x0,x3]=COVID19(0,3,eps);
-## norm(x3-T03*x0,1)+norm((T23*T12*T01-T03)*x0,1)
+## [K1718,A,x0,x,xx,yy,zz,f]=DiffCOVID19(17,18,1,eps,1);
 
 ## Author: fredy <fredy@HPCLAB>
-## Created: 2020-03-17
+## Created: 2020-04-01
 
-function [K,T,x0,x]=COVID19(m,n,tol,graph)
+function [K,A,x0,x,xx,yy,zz,f]=DiffCOVID19(m,n,p,tol,graph)
 m=m+1;
 n=n+1;
 pkg load io;
@@ -37,12 +33,19 @@ HNConnect=xlsread ('HNConnect1.xlsx');
 A=HNConnect (1:18,1:18);
 [M,N]=size(A);
 E=eye(M,N);
-K=A+E;
-if nargin<=3
+if nargin<=4
 	graph=1;
 end
-if graph==1
-	r=.5;
+x0=COVIDHist (1:18,m);
+x=COVIDHist (1:18,n);
+K=diag(x0>0)*A*diag(1./sum(A));
+K=E-K;
+d=K*x0;
+d=-(x-x0)'*d/(d'*d);
+K=E-d*K;
+[xx,yy]=meshgrid(-1.5:3/30:1.5);
+f=[];
+r=.5;
 	z1=(r*exp(2*pi*i*(0:6)/7)).';
 	z2=(2.0*r*exp(20*pi*i*(0:8)/(9*21))).';
 	z3=2.4*r*exp((pi+.1)*i/4);
@@ -50,42 +53,32 @@ if graph==1
 	xy([15 18 4 12 17 2 7],:)=[real(z1),imag(z1)];
 	xy([9 3 1 6 16 5 14 13 10],:)=[real(z2),imag(z2)];
 	xy(11,:)=[real(z3),imag(z3)];
-	subplot(211);
-	gplot (A,xy,'k-');
-	hold on;
-	plot(xy(:,1),xy(:,2),'k.','markersize',20,xy(8,1),...
-	xy(8,2),'r.','markersize',20,xy(6,1),xy(6,2),...
-	'b.','markersize',20);
-	hold off;
-	axis off;
-	axis square;
-	subplot(212);
-	XY=randn(M,2);
-	gplot (A,XY,'k-');
-	hold on;
-	plot(XY(:,1),XY(:,2),'k.','markersize',20,XY(8,1),...
-	XY(8,2),'r.','markersize',20,XY(6,1),XY(6,2),...
-	'b.','markersize',20);
-	hold off;
-	axis off;
-	axis square;
+for k=1:18
+	z=sqrt((xx-xy(k,1)).^2+(yy-xy(k,2)).^2);
+	m=min(min(z));
+	f=[f;find(z==m)];
 end
-x0=COVIDHist (1:18,m);
-f0=find(abs(x0)<=tol);
-x=COVIDHist (1:18,n);
-f1=find(abs(x)<=tol);
-f2=find(abs(x)>tol);
-x0(f0)=0;
-x(f1)=0;
-T=E;
-for k=f2
-	T0=E;
-	T0(k,:)=K(k,:).*(x(k)/x0);
-	T=T0*T;
+  [X,Y]=meshgrid (-1.5:3/150:1.5);
+  zz=zeros(size(xx));
+  zz(f)=Mxvec(K,x0,p);
+  Z=interp2(xx,yy,zz,X,Y,'spline');
+if graph==1
+  figure;
+  contour(X,Y,Z,64);
+  colormap summer;
+  hold on;
+  gplot (A,[xx(f) yy(f)],'k-');
+  plot(xx(f),yy(f),'k.','markersize',20,xx(f(8)),...
+  yy(f(8)),'r.','markersize',20,xx(f(6)),yy(f(6)),...
+  'b.','markersize',20);
+  hold off;
+  axis off;
+  axis square;
 end
-T0=ones(M,1);
-y0=T*x0;
-T0(f2)=x(f2)./y0(f2);
-T=diag(T0)*T;
-K=A+E;
+end
+function y=Mxvec(A,b,n)
+	y=b;	
+	for k=1:n
+		y=A*y;
+	end
 end
