@@ -44,9 +44,9 @@ function [Xh,T,EIHUB,EIHLB,EGHUB,EGHLB]=UACPredictor(n,r,tol)
 	EIHLB=EIHUB;
 	EGHLB=EGHUB;	
 	for k=1:(m-1)
-		EIHUB = [EIHUB (Xh(:,k+1)>0).*ceil(T*Xh(:,k))];
-		EIHLB = [EIHLB (Xh(:,k+1)>0).*floor(T*Xh(:,k))];
-		EGHUB = [EGHUB (Xh(:,k+1)>0).*ceil(T*EGHUB(:,k))];
-		EGHLB = [EGHLB (Xh(:,k+1)>0).*floor(T*EGHLB(:,k))];	
+		EIHUB = [EIHUB (Xh(:,k)>0).*ceil(T*Xh(:,k))];
+		EIHLB = [EIHLB (Xh(:,k)>0).*floor(T*Xh(:,k))];
+		EGHUB = [EGHUB (Xh(:,k)>0).*ceil(T*EGHUB(:,k))];
+		EGHLB = [EGHLB (Xh(:,k)>0).*floor(T*EGHLB(:,k))];	
 	end
 end
