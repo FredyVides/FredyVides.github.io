@@ -36,9 +36,9 @@ if sum(X)==0
 	Y1=Y2=Y3=Y=X;
 	t=1:length(X);
 else
-	[Y1,t,D,ts]=SDiffLB(X,0);
+	[Y1,t,D,ts]=SDiffLB(X,1);
 	[Y2,t]=EMod(X);
-	[Y3,t,D,ts]=SDiffUB(X,0);
+	[Y3,t,D,ts]=SDiffUB(X,1);
 	Y=[Y1;Y2;Y3];
 	w=Y'\X';
 	Y=w'*Y;
@@ -83,7 +83,7 @@ p=polyfit(ts,LD,1);
 Yt=S(1);
 for k=1:(Ls-1) 
 	Yt=[Yt Yt(k)+...
-	exp(polyval(p,k+1))];
+	exp(polyval(p,k))];
 end
 end
 
@@ -109,7 +109,7 @@ p=polyfit(ts,LD,1);
 Yt=S(1);
 for k=1:(Ls-1) 
 	Yt=[Yt Yt(k)+...
-	exp(polyval(p,k+1))];
+	exp(polyval(p,k))];
 end
 end
 
