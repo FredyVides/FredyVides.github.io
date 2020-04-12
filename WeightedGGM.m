@@ -116,9 +116,14 @@ end
 function [Yt,t]=EMod(S)
 Ls=length(S);
 t=0:(Ls-1);
-ff=find(S>0);
+D=diff(S);
+ff=find(D>0);
 ts=t(ff);
-LS=log(S(ff));
-p=polyfit(ts,LS,1);
-Yt=exp(polyval(p,t));
+LD=log(D(ff));
+p=polyfit(ts,LD,1);
+Yt=S(1);
+for k=1:(Ls-1) 
+	Yt=[Yt Yt(k)+...
+	exp(polyval(p,k))];
+end
 end
