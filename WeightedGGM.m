@@ -83,7 +83,7 @@ p=polyfit(ts,LD,1);
 Yt=S(1);
 for k=1:(Ls-1) 
 	Yt=[Yt Yt(k)+...
-	exp(polyval(p,k))];
+	exp(polyval(p,k-1))];
 end
 end
 
@@ -109,7 +109,7 @@ p=polyfit(ts,LD,1);
 Yt=S(1);
 for k=1:(Ls-1) 
 	Yt=[Yt Yt(k)+...
-	exp(polyval(p,k))];
+	exp(polyval(p,k-1))];
 end
 end
 
@@ -124,6 +124,6 @@ p=polyfit(ts,LD,1);
 Yt=S(1);
 for k=1:(Ls-1) 
 	Yt=[Yt Yt(k)+...
-	exp(polyval(p,k))];
+	exp(polyval(p,k-1))];
 end
 end
